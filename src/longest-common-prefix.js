@@ -9,30 +9,37 @@
  * @return {string}
  */
 var longestCommonPrefix = function (strs) {
-  if (strs.length === 0) {
+  const len = strs.length;
+  if (len === 0) {
     return "";
-  } else if (strs.length === 1) {
-    return strs[0];
   }
 
-  let prefix = "";
-  const first = strs[0];
+  const first = strs[0].split("");
+  if (len === 1) {
+    return first.join("");
+  }
+
+  let prefix = [];
   for (let i = 0; i < first.length; i++) {
+    const alpha = first[i];
     const isCommon = strs.every(function (str) {
-      return str[i] === first[i];
+      return str[i] === alpha;
     });
 
     if (isCommon) {
-      prefix += first[i];
+      prefix.push(alpha);
     } else {
       break;
     }
   }
 
-  return prefix;
+  return prefix.join("");
 };
 
 console.log(longestCommonPrefix(["frank", "france", "fnca"]));
 console.log(longestCommonPrefix(["frank", "france", "franca"]));
 console.log(longestCommonPrefix(["flower", "flow", "flight"]));
 console.log(longestCommonPrefix(["dog", "racecar", "car"]));
+console.log(longestCommonPrefix(["dog"]));
+console.log(longestCommonPrefix([""]));
+console.log(longestCommonPrefix([]));
