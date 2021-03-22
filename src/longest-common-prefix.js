@@ -33,3 +33,6 @@ var longestCommonPrefix = function (strs) {
 };
 
 console.log(longestCommonPrefix(["frank", "france", "fnca"]));
+console.log(longestCommonPrefix(["frank", "france", "franca"]));
+console.log(longestCommonPrefix(["flower", "flow", "flight"]));
+console.log(longestCommonPrefix(["dog", "racecar", "car"]));
