@@ -1,5 +1,17 @@
 {
-    "compilerOptions": {
-        "lib": ["ES6", "DOM"],
-    }
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "node16",
+    "types": ["node"],
+
+    "strict": true,
+    "noEmit": true,
+    "erasableSyntaxOnly": true,
+    "allowJs": true,
+    "checkJs": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src"]
 }
