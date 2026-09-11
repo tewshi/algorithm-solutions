@@ -31,9 +31,66 @@
 
 import { drill } from "../_drill.ts";
 
+interface Entry {
+  d: number;
+  p: number[];
+}
+type Entries = Entry[];
+class MaxHeap {
+  private items: Entries = [];
+  private k: number = 0;
+
+  constructor(k: number) {
+    this.k = k;
+  }
+
+  get size(): number {
+    return this.items.length;
+  }
+
+  get entries(): Entries {
+    return [...this.items];
+  }
+
+  peek(): Entry | undefined {
+    return this.items[0];
+  }
+
+  push(e: Entry): void {
+    const root = this.peek();
+    if (root && e.d < root.d && this.size === this.k) {
+      this.pop();
+    }
+
+    this.items.push(e);
+    let i = this.size - 1;
+    while (i > 0) {
+      const parent = (i - 1) >> 1;
+      if (this.items[parent].d >= this.items[i].d) break;
+
+      [this.items[parent], this.items[i]] = [this.items[i], this.items[parent]];
+
+      i = parent;
+    }
+
+    // if (this.size > this.k) {
+    //   this.items.splice(0, 1);
+    // }
+  }
+
+  pop(): Entry | undefined {
+    return this.items.shift();
+  }
+}
+
 export function kClosest(points: number[][], k: number): number[][] {
-  // YOUR CODE HERE
-  return [];
+  const maxHeap = new MaxHeap(k);
+  for (const p of points) {
+    const d = p[0]**2 + p[1]**2;
+    maxHeap.push({ d, p });
+  }
+
+  return maxHeap.entries.map(e => e.p);
 }
 
 // ---------------------------------------------------------------------------
