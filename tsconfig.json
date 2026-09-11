@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "ES2023",
     "lib": ["ES2023"],
-    "module": "node16",
+    "module": "nodenext",
+    "allowImportingTsExtensions": true,
     "types": ["node"],
 
     "strict": true,
