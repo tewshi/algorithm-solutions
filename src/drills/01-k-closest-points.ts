@@ -31,12 +31,14 @@
 
 import { drill } from "../_drill.ts";
 
+type Point = number[];
+type Points = Point[];
 interface Entry {
   d: number;
-  p: number[];
+  p: Point;
 }
 type Entries = Entry[];
-class MaxHeap {
+class MaxPointHeap {
   private items: Entries = [];
   private k: number = 0;
 
@@ -44,11 +46,25 @@ class MaxHeap {
     this.k = k;
   }
 
+  static from(k: number, points: Points) {
+    const maxHeap = new MaxPointHeap(k);
+    for (const p of points) {
+      const d = p[0]**2 + p[1]**2;
+      maxHeap.push({ d, p });
+    }
+
+    return maxHeap;
+  }
+
   get size(): number {
     return this.items.length;
   }
 
-  get entries(): Entries {
+  points(): Points {
+    return this.items.map(e => e.p);
+  }
+
+  entries(): Entries {
     return [...this.items];
   }
 
@@ -59,7 +75,7 @@ class MaxHeap {
   /** Bounded push: admit everything, then drop the farthest if we're over k. */
   push(e: Entry): void {
     this.items.push(e);
-    this.siftUp(this.size - 1);
+    this.siftUp();
 
     if (this.size > this.k) {
       this.pop();
@@ -68,19 +84,20 @@ class MaxHeap {
 
   /** Extract-max: swap the root out to the tail, drop it, restore downward. */
   pop(): Entry | undefined {
-    if (this.size === 0) return undefined;
+    const root = this.peek();
+    const last = this.items.pop();
+    if (!last) return undefined;
 
-    const root = this.items[0];
-    const last = this.items.pop()!;
     if (this.size > 0) {
       this.items[0] = last;
-      this.siftDown(0);
+      this.siftDown();
     }
 
     return root;
   }
 
-  private siftUp(i: number): void {
+  private siftUp(): void {
+    let i: number = this.size - 1;
     while (i > 0) {
       const parent = (i - 1) >> 1;
       if (this.items[parent].d >= this.items[i].d) break;
@@ -90,7 +107,8 @@ class MaxHeap {
     }
   }
 
-  private siftDown(i: number): void {
+  private siftDown(): void {
+    let i: number = 0;
     for (;;) {
       const left = 2 * i + 1;
       const right = left + 1;
@@ -110,28 +128,24 @@ class MaxHeap {
   }
 }
 
-export function kClosest(points: number[][], k: number): number[][] {
-  const maxHeap = new MaxHeap(k);
-  for (const p of points) {
-    const d = p[0]**2 + p[1]**2;
-    maxHeap.push({ d, p });
-  }
+export function kClosest(points: Points, k: number): Points {
+  const maxHeap = MaxPointHeap.from(k, points);
 
-  return maxHeap.entries.map(e => e.p);
+  return maxHeap.points();
 }
 
 // ---------------------------------------------------------------------------
 // Below the line is mine. Don't edit it — it's the interviewer.
 // ---------------------------------------------------------------------------
 
-const d2 = (p: number[]): number => p[0] * p[0] + p[1] * p[1];
+const d2 = (p: Point): number => p[0] * p[0] + p[1] * p[1];
 
 /**
  * Output order is unconstrained and ties are legal, so we compare the sorted
  * multiset of squared distances — and separately verify every returned point
  * really came from the input.
  */
-const probe = (points: number[][], k: number): number[] => {
+const probe = (points: Points, k: number): Point => {
   const pool = points.map((p) => p.join(","));
   const got = kClosest(points, k);
   if (!Array.isArray(got) || got.length !== k) return [-1];
@@ -143,7 +157,7 @@ const probe = (points: number[][], k: number): number[] => {
   return got.map(d2).sort((a, b) => a - b);
 };
 
-const reference = (points: number[][], k: number): number[] =>
+const reference = (points: Points, k: number): Point =>
   points
     .map(d2)
     .sort((a, b) => a - b)
@@ -163,11 +177,11 @@ drill("kClosest", probe, {
   reference,
   gen: (rng) => {
     const n = 1 + Math.floor(rng() * 10);
-    const pts: number[][] = [];
+    const pts: Points = [];
     for (let i = 0; i < n; i++) {
       pts.push([Math.floor(rng() * 9) - 4, Math.floor(rng() * 9) - 4]);
     }
     return [pts, 1 + Math.floor(rng() * n)] as Parameters<typeof probe>;
   },
-  trials: 400,
+  trials: 4000,
 });
