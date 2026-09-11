@@ -56,30 +56,57 @@ class MaxHeap {
     return this.items[0];
   }
 
+  /** Bounded push: admit everything, then drop the farthest if we're over k. */
   push(e: Entry): void {
-    const root = this.peek();
-    if (root && e.d < root.d && this.size === this.k) {
+    this.items.push(e);
+    this.siftUp(this.size - 1);
+
+    if (this.size > this.k) {
       this.pop();
     }
+  }
 
-    this.items.push(e);
-    let i = this.size - 1;
+  /** Extract-max: swap the root out to the tail, drop it, restore downward. */
+  pop(): Entry | undefined {
+    if (this.size === 0) return undefined;
+
+    const root = this.items[0];
+    const last = this.items.pop()!;
+    if (this.size > 0) {
+      this.items[0] = last;
+      this.siftDown(0);
+    }
+
+    return root;
+  }
+
+  private siftUp(i: number): void {
     while (i > 0) {
       const parent = (i - 1) >> 1;
       if (this.items[parent].d >= this.items[i].d) break;
 
-      [this.items[parent], this.items[i]] = [this.items[i], this.items[parent]];
-
+      this.swap(parent, i);
       i = parent;
     }
-
-    // if (this.size > this.k) {
-    //   this.items.splice(0, 1);
-    // }
   }
 
-  pop(): Entry | undefined {
-    return this.items.shift();
+  private siftDown(i: number): void {
+    for (;;) {
+      const left = 2 * i + 1;
+      const right = left + 1;
+      let largest = i;
+
+      if (left < this.size && this.items[left].d > this.items[largest].d) largest = left;
+      if (right < this.size && this.items[right].d > this.items[largest].d) largest = right;
+      if (largest === i) break;
+
+      this.swap(largest, i);
+      i = largest;
+    }
+  }
+
+  private swap(i: number, j: number): void {
+    [this.items[i], this.items[j]] = [this.items[j], this.items[i]];
   }
 }
 
