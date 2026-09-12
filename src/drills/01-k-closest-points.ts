@@ -74,11 +74,17 @@ class MaxPointHeap {
 
   /** Bounded push: admit everything, then drop the farthest if we're over k. */
   push(e: Entry): void {
-    this.items.push(e);
-    this.siftUp();
+    const root = this.peek();
+    let shouldSiftAndPop = this.size < this.k;
 
-    if (this.size > this.k) {
+    if (!shouldSiftAndPop && root && e.d < root.d) {
       this.pop();
+      shouldSiftAndPop = true;
+    }
+
+    if (shouldSiftAndPop) {
+      this.items.push(e);
+      this.siftUp();
     }
   }
 
