@@ -4,5 +4,8 @@
   "execMap": {
     "ts": "node",
     "js": "node"
+  },
+  "events": {
+    "start": "cls || clear"
   }
 }

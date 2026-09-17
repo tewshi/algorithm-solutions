@@ -35,31 +35,62 @@ import { drill } from "../_drill.ts";
 
 const ANALYSIS = {
   /** Rung 1 — time AND space. Be exact; "fast" and "slow" are not answers. */
-  rung1: "TODO",
+  rung1: "time: O(n^3), space: O(1)",
 
   /** Rung 2 — time AND space. Justify the time: how often can each index move? */
-  rung2: "TODO",
+  rung2: "time: O(n^2), space: O(n)",
 
   /** Rung 3 — time AND space. What does the space depend on, n or something else? */
-  rung3: "TODO",
+  rung3: "time: O(n^2), space: O(n)",
 
   /**
    * THE INVARIANT — one sentence, true at the top of every iteration.
    * Of the form: "<window> always contains ___, because ___."
    * Not "a map stores characters". What does your WINDOW guarantee?
    */
-  invariant: "TODO",
+  invariant: "window always contains the longest substring because we start by checking the longest unique substring, and shrink the size down",
 
   /**
    * Once you have the invariant, answer this — it is the whole drill:
    * can the left edge ever move BACKWARDS? Why does that matter?
    */
-  leftEdge: "TODO",
+  leftEdge: "yes it can move backwards, it matters because if it doesn't move backwards then we will not be able to get all substrings in certain cases",
 };
 
+function isUnique(s: string): boolean {
+  return new Set(s.split('')).size === s.length;
+}
+
+function isUniform(s: string): boolean {
+  return new Set(s.split('')).size === 1;
+}
+
 export function lengthOfLongestSubstring(s: string): number {
-  // YOUR CODE HERE
-  return 0;
+  const l = s.length;
+  if (l <= 1) {
+    return l;
+  }
+
+  if (isUniform(s)) {
+    return 1;
+  }
+
+  if (isUnique(s)) {
+    return l;
+  }
+
+  let longest = 0;
+
+  for (let i = 0; i <= (l - 1); i++) {
+    for (let j = l; j - i >= 2; j--) {
+      const sublength = s.substring(i, j).length;
+      if (isUnique(s.substring(i, j)) && sublength > longest) {
+        longest = sublength;
+      }
+    }
+  }
+
+  return longest;
 }
 
 // ---------------------------------------------------------------------------
