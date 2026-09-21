@@ -38,10 +38,10 @@ const ANALYSIS = {
   rung1: "time: O(n^3), space: O(1)",
 
   /** Rung 2 — time AND space. Justify the time: how often can each index move? */
-  rung2: "time: O(n^2), space: O(n)",
+  rung2: "time: O(n log k), space: O(1)",
 
   /** Rung 3 — time AND space. What does the space depend on, n or something else? */
-  rung3: "time: O(n^2), space: O(n)",
+  rung3: "time: O(n log k), space: O(1)",
 
   /**
    * THE INVARIANT — one sentence, true at the top of every iteration.
@@ -79,18 +79,17 @@ export function lengthOfLongestSubstring(s: string): number {
     return l;
   }
 
-  let longest = 0;
-
-  for (let i = 0; i <= (l - 1); i++) {
-    for (let j = l; j - i >= 2; j--) {
-      const sublength = s.substring(i, j).length;
-      if (isUnique(s.substring(i, j)) && sublength > longest) {
-        longest = sublength;
+  for (let i = l - 1; i >= 2; i--) {
+    for (let j = 0; j <= l - i; j++) {
+      const substr = s.substring(j, i + j);
+      const sublengthL = substr.length;
+      if (isUnique(substr)) {
+        return sublengthL;
       }
     }
   }
 
-  return longest;
+  return 1;
 }
 
 // ---------------------------------------------------------------------------
