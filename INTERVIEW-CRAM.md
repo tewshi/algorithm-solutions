@@ -1,5 +1,35 @@
 # Amazon SDE II — night-before sheet
 
+## 0a. Phone screen ≠ the loop — read this first
+
+**Format:** ~45–60 min. Usually 1–2 LP questions up front (~10–15 min), then ONE
+coding problem. **No system design.** The bar is "solves it cleanly and communicates
+well", not "instantly produces the optimal answer".
+
+**You probably cannot run the code.** Amazon phone screens use a shared editor that
+often does not execute. Every habit you have built — write it, run the harness, see
+green — is unavailable. You must verify by *reading*:
+
+- Before saying "done", **hand-trace the trickiest input out loud.** For a sliding
+  window that is `"abba"`; for an in-place two-pointer it is a two-element array.
+- Check the boundaries by reading: empty input, single element, and **the last
+  iteration**. Trailing-element bugs are the ones that survive casual testing.
+- State your test cases even though you cannot run them. "I would check empty,
+  all-identical, all-distinct, and a repeat at the very end."
+
+**Talk continuously.** On a phone call, silence reads as being stuck. Narrate while
+typing. If you need to think, say "let me think about the edge case here" out loud.
+
+**Clarify explicitly** — there is no body language, so ask your constraint questions
+as direct questions and wait for answers.
+
+**What phone screens actually ask:** arrays, strings, hash maps, two pointers,
+sliding window, simple BFS. Rarely DP. Rarely hard graphs. Sections 2, 3 and 7 below
+are the core; skim 4 and 5, and do not lose sleep over anything else.
+
+**LP at this stage:** 1–2 questions, not the full battery. Two solid stories is enough
+for tomorrow. Save the other four for the loop.
+
 ## 0. The script (worth more than any single algorithm)
 
 1. **Ask for 90 seconds before coding.** Input size? Value ranges? Duplicates? Sorted?
